@@ -10,5 +10,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-mod hashmap;
-mod typing;
+use std::any::type_name;
+
+#[allow(dead_code)]
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    #[test]
+    fn test_get_obj_type_name() {
+        let mut m = HashMap::new();
+        m.insert(String::from("foo"), String::from("boo"));
+        m.insert(String::from("fu"), String::from("bar"));
+
+        assert_eq!(
+            "std::collections::hash::map::HashMap<alloc::string::String, alloc::string::String>",
+            type_of(m)
+        );
+    }
+}
