@@ -10,27 +10,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::any::type_name;
+use std::error::Error;
 
 #[allow(dead_code)]
-pub fn type_of<T>(_: &T) -> &'static str {
-    type_name::<T>()
+struct Action {
+    name: String,
+    enabled: bool,
+}
+
+#[allow(dead_code)]
+fn create_new_action(name: &str, enabled: bool) -> Result<Action, Box<dyn Error>> {
+    let action = Action {name: name.to_string(), enabled};
+    Ok(action)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashMap;
+    use crate::typing;
 
     #[test]
-    fn test_get_obj_type_name() {
-        let mut m = HashMap::new();
-        m.insert(String::from("foo"), String::from("boo"));
-        m.insert(String::from("fu"), String::from("bar"));
-
-        assert_eq!(
-            "std::collections::hash::map::HashMap<alloc::string::String, alloc::string::String>",
-            type_of(&m)
-        );
+    fn test_create_and_return_new_struct() {
+        let action = create_new_action("noop", true).unwrap();
+        assert_eq!("rust_examples::functions::Action", typing::type_of(&action));
+        assert_eq!("noop", action.name);
+        assert_eq!(true, action.enabled);
     }
 }
