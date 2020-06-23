@@ -10,9 +10,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#![feature(proc_macro_hygiene)]
+#[cfg(test)]
+mod tests {
+    use inline_python::Context;
+    use inline_python::python;
 
-mod functions;
-mod hashmap;
-mod python;
-mod typing;
+    #[test]
+    fn test_inline_py() {
+        let c = Context::new();
+
+        c.run(python! {
+            z = 1 + 1 
+        });
+
+        assert_eq!(c.get::<i32>("z"), 2);
+    }
+
+    #[test]
+    fn test_inline_py_pass_vars() {
+        let c = Context::new();
+        let x = 2;
+        let y = 3;
+
+        c.run(python! {
+            z = 'x + 'y
+        });
+
+        assert_eq!(c.get::<i32>("z"), 5);
+    }
+}

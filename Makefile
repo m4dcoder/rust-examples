@@ -12,11 +12,11 @@
 
 .PHONY: check
 check:
-	cargo clippy --all-targets --all-features -- -D warnings
+	cargo +nightly clippy --all-targets --all-features -- -D warnings
 
 .PHONY: tests
 tests: check
-	export RUST_BACKTRACE=1 && cargo test --verbose --all -- --nocapture
+	export RUST_BACKTRACE=1 && cargo +nightly test --verbose --all -- --nocapture
 
 .PHONY: build
 build:
