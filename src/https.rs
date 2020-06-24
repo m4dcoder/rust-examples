@@ -10,10 +10,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#![feature(proc_macro_hygiene)]
+#[cfg(test)]
+mod tests {
 
-mod functions;
-mod hashmap;
-mod https;
-mod python;
-mod typing;
+    #[test]
+    fn test_basic_http() {
+        let result = reqwest::blocking::get("https://www.google.com");
+        let response = result.unwrap();
+        assert_eq!(200, response.status());
+        let body = response.text().unwrap();
+        assert_eq!(true, body.contains("<html"));        
+    }
+}
